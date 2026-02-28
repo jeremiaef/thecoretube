@@ -1,7 +1,14 @@
+export interface ActionOption {
+  text: string;       // the action statement
+  steps: string[];    // 3 micro-steps to guide the user
+  time?: string;      // estimated time e.g. "5 menit"
+}
+
 export interface Slide {
   type: "hook" | "insight" | "action";
   title?: string;
   text: string;
+  actions?: (string | ActionOption)[]; // supports old string[] and new ActionOption[]
 }
 
 export interface Card {
@@ -10,6 +17,7 @@ export interface Card {
   youtuber: string;
   title: string;
   slides: Slide[];
+  image_url?: string;
 }
 
 export const cards: Card[] = [

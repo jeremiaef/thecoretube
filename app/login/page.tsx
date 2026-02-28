@@ -2,6 +2,14 @@
 import { useState } from "react";
 import { supabase } from "../lib/supabase";
 import { useRouter } from "next/navigation";
+import { DM_Sans } from "next/font/google";
+import styles from "./login.module.css";
+
+const dmSans = DM_Sans({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "700"],
+  variable: "--font-dm-sans",
+});
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -21,84 +29,65 @@ export default function Login() {
     if (isSignUp) {
       const { error } = await supabase.auth.signUp({ email, password });
       if (error) setError(error.message);
-      else setMessage("Cek email kamu untuk verifikasi!");
+      else setMessage("Check your email to verify your account!");
     } else {
       const { error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) setError(error.message);
-      else router.push("/");
+      else router.push("/app");
     }
 
     setLoading(false);
   };
 
   return (
-    <div className="min-h-screen bg-gray-950 text-white flex flex-col items-center justify-center px-4">
-      <div className="w-full max-w-sm">
+    <div className={`${styles.page} ${dmSans.variable}`}>
+      <div className={styles.card}>
+
         {/* Logo */}
-        <h1 className="text-3xl font-bold text-center mb-8">
-          Core<span className="text-cyan-400">Tube</span>
-        </h1>
+        <img src="/logo-transparent.png" alt="We Are Doers" className={styles.logo} />
+        <p className={styles.tagline}>We are Doers, not Watchers</p>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <input
-              type="email"
-              placeholder="Email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              className="w-full px-4 py-3 rounded-xl bg-gray-800 border border-gray-700 text-white placeholder-gray-500 focus:outline-none focus:border-cyan-500 transition"
-            />
-          </div>
-          <div>
-            <input
-              type="password"
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              minLength={6}
-              className="w-full px-4 py-3 rounded-xl bg-gray-800 border border-gray-700 text-white placeholder-gray-500 focus:outline-none focus:border-cyan-500 transition"
-            />
-          </div>
+        <form onSubmit={handleSubmit} className={styles.form}>
+          <input
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+            className={styles.input}
+          />
+          <input
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+            minLength={6}
+            className={styles.input}
+          />
 
-          {error && (
-            <p className="text-red-400 text-sm text-center">{error}</p>
-          )}
-          {message && (
-            <p className="text-green-400 text-sm text-center">{message}</p>
-          )}
+          {error && <p className={styles.error}>{error}</p>}
+          {message && <p className={styles.success}>{message}</p>}
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full py-3 rounded-xl bg-cyan-500 hover:bg-cyan-600 text-white font-semibold transition disabled:opacity-50"
-          >
-            {loading ? "Loading..." : isSignUp ? "Sign Up" : "Login"}
+          <button type="submit" disabled={loading} className={styles.submitBtn}>
+            {loading ? "Loading..." : isSignUp ? "Create Account" : "Sign In"}
           </button>
         </form>
 
         {/* Toggle */}
-        <p className="text-center text-gray-500 text-sm mt-6">
-          {isSignUp ? "Udah punya akun?" : "Belum punya akun?"}{" "}
+        <p className={styles.toggle}>
+          {isSignUp ? "Already have an account? " : "Don't have an account? "}
           <button
-            onClick={() => {
-              setIsSignUp(!isSignUp);
-              setError("");
-              setMessage("");
-            }}
-            className="text-cyan-400 hover:underline"
+            onClick={() => { setIsSignUp(!isSignUp); setError(""); setMessage(""); }}
+            className={styles.toggleBtn}
           >
-            {isSignUp ? "Login" : "Sign Up"}
+            {isSignUp ? "Sign In" : "Sign Up"}
           </button>
         </p>
-        
-        <button
-          onClick={() => router.push("/landing")}
-          className="text-gray-600 hover:text-gray-400 text-sm mt-4 block mx-auto"
-        >
-          ← Kembali
+
+        <button onClick={() => router.push("/")} className={styles.back}>
+          ← Back
         </button>
       </div>
     </div>
