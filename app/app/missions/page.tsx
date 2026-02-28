@@ -45,7 +45,7 @@ export default function MissionsPage() {
 
       if (!challenges || challenges.length === 0) { setLoading(false); return; }
 
-      const cardIds = [...new Set(challenges.map((c) => c.card_id))];
+      const cardIds = Array.from(new Set(challenges.map((c) => c.card_id)));
       const { data: cards } = await supabase
         .from("cards")
         .select("id, title, category, youtuber")
